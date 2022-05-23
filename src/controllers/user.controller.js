@@ -10,6 +10,7 @@ const sendMail2 = require("../services/googleMailService");
 const jwt = require("jsonwebtoken"); //jwt for user stay logged in
 const { OAuth2Client } = require("google-auth-library");
 const jwtHandling = require("../services/jwt");
+const bcrypt = require("bcrypt");
 
 const client = new OAuth2Client(
   "1072432309097-3npmrqi8dk2fm3eho7q54h9tn3ulfnku.apps.googleusercontent.com"
@@ -69,14 +70,14 @@ class UserController {
       if (passwordProcess.success === false) {
         return res
           .status(StatusCodes.INTERNAL_SERVER_ERROR)
-          .json("error during account creation");
+          .json("Error during account creation");
       }
       const role = await roleDao.getRoleByName("client");
       if (role.success === false) {
-        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json("error ");
+        return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json("Error ");
       }
       if (!role.data) {
-        return res.status(StatusCodes.NOT_FOUND).json("error");
+        return res.status(StatusCodes.NOT_FOUND).json("Error");
       }
       //enregistrement user dans la base
       const user = new userModel({
@@ -92,12 +93,12 @@ class UserController {
 
       return res
         .status(StatusCodes.CREATED)
-        .json("account created successfully");
+        .json("Account created successfully");
     } catch (error) {
       console.log(error);
       return res
         .status(StatusCodes.INTERNAL_SERVER_ERROR)
-        .json("error during account creation, please try again later");
+        .json("Error during account creation, please try again later");
     }
   }
   //la fonction asynchrone signin
@@ -265,10 +266,12 @@ class UserController {
       const userId = req.infos.authId;
       const usersById = await userDao.findUserById(userId);
       if (usersById.success === false) {
-        return res.status(StatusCodes.BAD_REQUEST).json("can not get users");
+        return res
+          .status(StatusCodes.BAD_REQUEST)
+          .json("Cannot get profile informations");
       }
       if (!usersById.data) {
-        return res.status(StatusCodes.NOT_FOUND).json("user not found");
+        return res.status(StatusCodes.NOT_FOUND).json("User not found");
       }
 
       return res.status(StatusCodes.OK).json(usersById.data);
@@ -278,6 +281,50 @@ class UserController {
         .json("error..please try again");
     }
   }
+  async comparePassword(req, res) {
+    const userId = req.infos.authId;
+    const { password } = req.body;
+    const usersById = await userDao.findUserById(userId);
+    const decryptedPaswword = await passwordService.decryption(
+      usersById.data.password,
+      password
+    );
+    if (decryptedPaswword.success === false) {
+      return res
+        .status(StatusCodes.INTERNAL_SERVER_ERROR)
+        .json("Error during Sing in");
+    }
+    if (!decryptedPaswword.data) {
+      return res.status(StatusCodes.FORBIDDEN).json("Wrong Password");
+    }
+    if (decryptedPaswword.data) {
+      return res.status(StatusCodes.OK).json("right password");
+    }
+    if (usersById.success === false) {
+      return res.status(StatusCodes.BAD_REQUEST).json("Can not get users ");
+    }
+    if (!usersById.data) {
+      return res.status(StatusCodes.NOT_FOUND).json("User not found");
+    }
+
+    //return res.status(StatusCodes.OK).json("correct password");
+  }
+  async setNewPassword(req, res, next) {
+    try {
+      const { userId } = req.params;
+      const salt = await bcrypt.genSalt(10);
+      const password = await bcrypt.hash(req.body.password, salt);
+      const userPassword = await userModel.findByIdAndUpdate(
+        { _id: userId },
+        { password: password },
+        { new: true }
+      );
+      return res.status(200).json({ status: true, data: userPassword });
+    } catch (error) {
+      return res.status(400).json({ status: false, error: "erreur" });
+    }
+  }
+
   async googlesignin(req, res) {
     const role = await roleDao.getRoleByName("client");
 

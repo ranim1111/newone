@@ -37,12 +37,12 @@ class commentsController {
         .populate("userId")
         .exec();
       if (!result) {
-        return res.status(StatusCodes.NOT_FOUND).json("comment not found");
+        return res.status(StatusCodes.NOT_FOUND).json("Comment not found");
       }
       if (result.userId._id.toString() !== req.infos.authId) {
         return res
           .status(StatusCodes.FORBIDDEN)
-          .json("cannot delete this comment");
+          .json("Cannot delete this comment");
       }
       const deleteResult = await commentsModel
         .findByIdAndRemove(req.params.id)
@@ -71,9 +71,11 @@ class commentsController {
   }
 
   async getCommentByUserId(req, res, next) {
-    const userId = mongoose.Types.ObjectId(req.params.id);
+    const userId =
+      req.infos.role == "admin" ? req.params.userId : req.infos.authId;
+    //const userId = mongoose.Types.ObjectId(req.params.id);
     //const userId = req.params.userId._id;
-    json(userId);
+    //json(userId);
     const result = await commentsModel.find(userId); //.populate("userId").exec();
     return res.status(StatusCodes.OK).json(result);
   }

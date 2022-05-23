@@ -37,6 +37,13 @@ router.get(
   [jwtHandling.jwtVerify, userGuard],
   userController.getProfilInfo
 );
+router.post(
+  "/comparePassword/:userId?",
+  [jwtHandling.jwtVerify, userGuard],
+  userController.comparePassword
+);
+router.post("/setNewPassword/:userId", userController.setNewPassword);
+
 /*
 
 router.post("/signup", userController.signup);

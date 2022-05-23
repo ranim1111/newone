@@ -31,7 +31,7 @@ class JoinedFilesContollers {
       const file = gfs
         .find({
           _id: mongoose.Types.ObjectId(fileName1),
-          "metadata.userId": userId,
+          // "metadata.userId" :  userId
         })
         .toArray((err, files) => {
           if (!files || files.length === 0) {
@@ -162,7 +162,7 @@ class JoinedFilesContollers {
           // console.log("aaaaaaaaaaaa")
           if (!files || files.length === 0) {
             return res.status(404).json({
-              err: "no files exist",
+              err: "No files exist",
             });
           }
           console.log(files[0]._id);
@@ -171,7 +171,7 @@ class JoinedFilesContollers {
 
             return res
               .status(StatusCodes.OK)
-              .json("file deleted successfully!");
+              .json("File deleted successfully!");
           });
         });
     } else {
@@ -184,7 +184,7 @@ class JoinedFilesContollers {
           // console.log("aaaaaaaaaaaa")
           if (!files || files.length === 0) {
             return res.status(404).json({
-              err: "no files exist",
+              err: "No files exist",
             });
           }
           console.log(files[0]._id);
@@ -193,7 +193,7 @@ class JoinedFilesContollers {
 
             return res
               .status(StatusCodes.OK)
-              .json("file deleted successfully!");
+              .json("File deleted successfully!");
           });
         });
     }
@@ -237,7 +237,7 @@ class JoinedFilesContollers {
         .toArray((err, files) => {
           if (!files || files.length === 0) {
             return res.status(404).json({
-              err: "no files exist",
+              err: "No files exist",
             });
           }
 
@@ -254,7 +254,7 @@ class JoinedFilesContollers {
         .toArray((err, files) => {
           if (!files || files.length === 0) {
             return res.status(404).json({
-              err: "no files exist",
+              err: "No files exist",
             });
           }
 
