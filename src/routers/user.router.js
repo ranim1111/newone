@@ -42,7 +42,11 @@ router.post(
   [jwtHandling.jwtVerify, userGuard],
   userController.comparePassword
 );
-router.post("/setNewPassword/:userId", userController.setNewPassword);
+router.post(
+  "/setNewPassword/:userId?",
+  [jwtHandling.jwtVerify, userGuard],
+  userController.setNewPassword
+);
 
 /*
 

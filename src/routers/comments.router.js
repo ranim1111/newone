@@ -19,16 +19,21 @@ router.get(
   [jwtHandling.jwtVerify, adminGuard],
   commentsController.commentslist
 );
-//router.put("/updatecomment/:id", commentsController.updatecomment);
+router.put(
+  "/updatecomment/:id",
+  [jwtHandling.jwtVerify, adminGuard],
+  commentsController.updatecomment
+);
+router.put("/likecomment/:id", commentsController.likecomment);
 /*router.get(
   "/getCommentByUserName/:userId",
   [jwtHandling.jwtVerify, adminGuard],
   commentsController.getCommentByUserName
 );*/
 router.get(
-  "/getCommentByUserId/:userId",
-  [jwtHandling.jwtVerify, adminGuard],
-  commentsController.getCommentByUserId
+  "/getCommentById/:id?",
+
+  commentsController.getCommentById
 );
 //router.get("/getCommentByKey/:key", commentsController.getCommentByKey);
 module.exports = router;

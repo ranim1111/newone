@@ -8,6 +8,8 @@ const uploadRouter = require("./routers/upload.router");
 const commentsRouter = require("./routers/comments.router");
 const passwordRouter = require("./routers/passwordf.router");
 const chartRouter = require("./routers/chart.router");
+const replyRouter = require("./routers/reply.router");
+
 const app = express(); //instance d'express nommé app
 
 app.use(cors());
@@ -18,6 +20,7 @@ app.use("/admin", adminRouter);
 app.use("/comments", commentsRouter);
 app.use("/password", passwordRouter);
 app.use("/chart", chartRouter);
+app.use("/reply", replyRouter);
 const mongoURI =
   "mongodb+srv://ranimba:21428118@cluster0.sa78t.mongodb.net/pfe2?retryWrites=true&w=majority";
 

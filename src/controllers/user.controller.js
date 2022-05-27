@@ -290,9 +290,7 @@ class UserController {
       password
     );
     if (decryptedPaswword.success === false) {
-      return res
-        .status(StatusCodes.INTERNAL_SERVER_ERROR)
-        .json("Error during Sing in");
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json("Error");
     }
     if (!decryptedPaswword.data) {
       return res.status(StatusCodes.FORBIDDEN).json("Wrong Password");
@@ -311,7 +309,8 @@ class UserController {
   }
   async setNewPassword(req, res, next) {
     try {
-      const { userId } = req.params;
+      const userId = req.infos.authId;
+
       const salt = await bcrypt.genSalt(10);
       const password = await bcrypt.hash(req.body.password, salt);
       const userPassword = await userModel.findByIdAndUpdate(

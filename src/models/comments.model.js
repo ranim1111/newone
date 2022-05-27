@@ -1,11 +1,12 @@
 const mongoose = require("mongoose");
 
-//le modele "user" de la base Mango
+//le modele "comments" de la base Mongo
 const commentsschema = new mongoose.Schema({
   topic: String,
   content: String,
   userId: { type: mongoose.Schema.Types.ObjectId, ref: "user" },
   createdAt: Date,
+
   //number: Number,
 });
 
