@@ -1,4 +1,4 @@
-const express = require("express");
+/*const express = require("express");
 const router = express.Router();
 const replyController = require("../controllers/reply.controller");
 const adminGuard = require("../guards/admin.guard");
@@ -8,12 +8,13 @@ router.post(
   //[jwtHandling.jwtVerify, adminGuard],
   replyController.addReply
 );
-/*router.post(
+router.post(
   "/addreply",
   [jwtHandling.jwtVerify, adminGuard],
   replyController.addReply
-);*/
+);
 //router.post("/newpassword", replyController.newpassword);
 router.get("/replies", replyController.getReplies);
 
 module.exports = router;
+*/

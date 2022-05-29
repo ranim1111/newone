@@ -1,35 +1,42 @@
 const commentDao = require("../dao/comment.dao");
 const replyModel = require("../models/reply.model");
-
+const userDao = require("../dao/user.dao");
+const userModel = require("../models/user.model");
 const mongoose = require("mongoose");
 const commentsModel = require("../models/comments.model");
 const { StatusCodes } = require("http-status-codes");
 
 class commentsController {
-  /*async addReply(req, res) {
+  async getReplies(req, res, next) {
+    const result = await replyModel
+      .find()
+      .populate("userId")
+      .populate("commentId")
+      .exec();
+    return res.status(StatusCodes.OK).json(result);
+  }
+  async addReply(req, res) {
     try {
       const { text } = req.body;
       const commentId = await commentDao.findComById(req.params.id);
       //return res.status(StatusCodes.CREATED).json(commentId);
-      //const userId = req.infos.authId;
+      const userId = req.infos.authId;
 
       const reply = new replyModel({
         text,
-        //userId,
+        userId,
         commentId: commentId.data._id,
         createdAt: Date.now(),
       });
       await reply.save();
       // Associate Post with reply
-      commentId.reply.push(commentId._id);
-      await post.save();
 
-      return res.status(StatusCodes.CREATED).json(commentId);
+      return res.status(StatusCodes.CREATED).json("added");
       //return res.status(StatusCodes.CREATED).json("added");
     } catch (error) {
       return error;
     }
-  }*/
+  }
   async addComment(req, res) {
     try {
       const { topic, content } = req.body;
@@ -40,7 +47,7 @@ class commentsController {
         content,
         userId,
         createdAt: Date.now(),
-        likes: [userId],
+        //likes: [userId],
       });
       await comment.save();
       //console.log("added");
@@ -118,6 +125,20 @@ class commentsController {
         .json("Error..please try again");
     }
   }
+  async getCommentByUser(req, res, next) {
+    try {
+      await commentsModel
+        .find({ userId: req.infos.authId })
+        .populate("userId")
+
+        .then((comments) => {
+          res.status(200).json(comments);
+        });
+    } catch (error) {
+      res.status(500).send({ error: error.message });
+    }
+  }
+
   async likecomment(req, res, next) {
     const likeStatus = req.body.likeStatus;
     if (likeStatus === 0) {

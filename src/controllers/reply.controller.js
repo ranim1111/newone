@@ -1,4 +1,4 @@
-const replyModel = require("../models/reply.model");
+/*const replyModel = require("../models/reply.model");
 const { StatusCodes } = require("http-status-codes");
 const commentsModel = require("../models/comments.model");
 const commentDao = require("../dao/comment.dao");
@@ -35,3 +35,4 @@ class replyController {
   }
 }
 module.exports = new replyController();
+*/

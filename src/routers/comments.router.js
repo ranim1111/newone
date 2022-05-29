@@ -3,7 +3,14 @@ const router = express.Router();
 const commentsController = require("../controllers/comments.controller");
 const adminGuard = require("../guards/admin.guard");
 const jwtHandling = require("../services/jwt");
+const replyController = require("../controllers/reply.controller");
 
+router.post(
+  "/:id?/addreply",
+  //[jwtHandling.jwtVerify, adminGuard],
+  commentsController.addReply
+);
+router.get("/replies", commentsController.getReplies);
 router.post(
   "/addcomment/",
   [jwtHandling.jwtVerify, adminGuard],
@@ -35,5 +42,9 @@ router.get(
 
   commentsController.getCommentById
 );
-//router.get("/getCommentByKey/:key", commentsController.getCommentByKey);
+router.get(
+  "/getCommentByUser/:userId?",
+  [jwtHandling.jwtVerify, adminGuard],
+  commentsController.getCommentByUser
+);
 module.exports = router;
