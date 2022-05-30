@@ -7,36 +7,6 @@ const commentsModel = require("../models/comments.model");
 const { StatusCodes } = require("http-status-codes");
 
 class commentsController {
-  async getReplies(req, res, next) {
-    const result = await replyModel
-      .find()
-      .populate("userId")
-      .populate("commentId")
-      .exec();
-    return res.status(StatusCodes.OK).json(result);
-  }
-  async addReply(req, res) {
-    try {
-      const { text } = req.body;
-      const commentId = await commentDao.findComById(req.params.id);
-      //return res.status(StatusCodes.CREATED).json(commentId);
-      const userId = req.infos.authId;
-
-      const reply = new replyModel({
-        text,
-        userId,
-        commentId: commentId.data._id,
-        createdAt: Date.now(),
-      });
-      await reply.save();
-      // Associate Post with reply
-
-      return res.status(StatusCodes.CREATED).json("added");
-      //return res.status(StatusCodes.CREATED).json("added");
-    } catch (error) {
-      return error;
-    }
-  }
   async addComment(req, res) {
     try {
       const { topic, content } = req.body;
@@ -47,7 +17,7 @@ class commentsController {
         content,
         userId,
         createdAt: Date.now(),
-        //likes: [userId],
+        replies: [userId],
       });
       await comment.save();
       //console.log("added");

@@ -16,5 +16,4 @@ router.post(
 //router.post("/newpassword", replyController.newpassword);
 router.get("/replies", replyController.getReplies);
 
-module.exports = router;
-*/
+module.exports = router;*/

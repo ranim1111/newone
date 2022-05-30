@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 //le modele "comments" de la base Mongo
 const likeschema = new mongoose.Schema({
-  text: String,
+  commentId: { type: mongoose.Schema.Types.ObjectId, ref: "comments" },
   userId: { type: mongoose.Schema.Types.ObjectId, ref: "user" },
   createdAt: Date,
 });

@@ -5,12 +5,14 @@ const adminGuard = require("../guards/admin.guard");
 const jwtHandling = require("../services/jwt");
 const replyController = require("../controllers/reply.controller");
 
+router.get("/replies", replyController.getReplies);
+router.get("/:id?/getreply", replyController.getRepliesForEachComment);
+
 router.post(
   "/:id?/addreply",
   //[jwtHandling.jwtVerify, adminGuard],
-  commentsController.addReply
+  replyController.addReply
 );
-router.get("/replies", commentsController.getReplies);
 router.post(
   "/addcomment/",
   [jwtHandling.jwtVerify, adminGuard],
