@@ -8,7 +8,6 @@ const commentsschema = new mongoose.Schema(
     userId: { type: mongoose.Schema.Types.ObjectId, ref: "user" },
     createdAt: Date,
   }
-  // { timestamps: true }
 
   //Date,
   //commentId: { type: mongoose.Schema.Types.ObjectId, ref: "comments" },

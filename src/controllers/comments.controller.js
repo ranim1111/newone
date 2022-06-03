@@ -17,7 +17,6 @@ class commentsController {
         content,
         userId,
         createdAt: Date.now(),
-        replies: [userId],
       });
       await comment.save();
       //console.log("added");
@@ -108,33 +107,6 @@ class commentsController {
       res.status(500).send({ error: error.message });
     }
   }
-
-  async likecomment(req, res, next) {
-    const likeStatus = req.body.likeStatus;
-    if (likeStatus === 0) {
-      commentsModel
-        .updateOne(
-          { _id: req.params.id },
-          { $inc: { likes: -1 }, $pull: { usersLiked: userIdentifiant } }
-        )
-        .then(() => {
-          return commentsModel.updateOne(
-            { _id: req.params.id },
-            {
-              $inc: { dislikes: +1 },
-              $pull: { usersDisliked: userIdentifiant },
-            }
-          );
-        })
-        .then(() => {
-          res.status(201).json({
-            message: ["Like has been canceled", "Dislike has been canceled"],
-          });
-        })
-        .catch((error) => res.status(400).json(error));
-    }
-  }
-  async dislikecomment(req, res, next) {}
 }
 
 module.exports = new commentsController();
